@@ -1,0 +1,36 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: traefik:2.0
+    container_name: traefik
+    ports:
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "$PWD/conf/traefik.yml:/etc/traefik/traefik.yml"
+      - "$PWD/conf/dynamic-conf.yml:/dynamic-conf.yml"
+      - "${ACME_PATH}:/acme.json"
+    networks:
+      - web
+
+  traefik-fa:
+    image: thomseddon/traefik-forward-auth:2
+    container_name: traefik-fa
+    volumes:
+      - "$PWD/conf/forward.ini:/forward.ini"
+    environment:
+      - CONFIG=/forward.ini
+    networks:
+      - web
+    labels:
+      - "traefik.backend=${TRAEFIKFA_NAME}"
+      - "traefik.http.services.traefikfa.loadBalancer.server.port=${TRAEFIKFA_PORT}"
+      - "traefik.http.routers.traefik-fa-ssl.rule=host(`auth.${TRAEFIK_DOMAIN}`)"
+      - "traefik.http.routers.traefik-fa-ssl.middlewares=sso@file"
+      - "traefik.http.routers.traefik-fa-ssl.tls=true"
+      - "traefik.http.routers.traefik-fa-ssl.tls.certResolver=le"
+
+networks:
+  web:
+    external: true

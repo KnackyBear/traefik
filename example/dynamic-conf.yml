@@ -1,0 +1,19 @@
+http:
+    routers:
+      api:
+        # Put the dns to access to traefik dashboard here
+        rule: Host(`traefik-api.mydomain.com`)
+        entrypoints:
+          - websecure
+        service: api@internal
+        middlewares:
+          - sso@file
+        tls:
+          certResolver: le
+    middlewares:
+      sso:
+        forwardAuth:
+          # Put the adress of your forward auth service here (ie. http://myservicefa:myport)
+          address: ""
+          authResponseHeaders: ["X-Forwarded-User"]
+  

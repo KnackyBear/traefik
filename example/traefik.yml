@@ -1,0 +1,25 @@
+entryPoints:
+    websecure:
+      address: ':443'
+  
+  api: {}
+  
+  log:
+    level: INFO
+  
+  providers:
+    docker:
+      endpoint: "unix:///var/run/docker.sock"
+      watch: true
+      network: web # Beware to create external network before
+    file:
+      filename: /dynamic-conf.yml
+      watch: true
+  
+  certificatesResolvers:
+    le:
+      acme:
+        email: yourmail@domain
+        storage: /acme.json
+        tlsChallenge: {}
+  
