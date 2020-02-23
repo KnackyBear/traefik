@@ -11,6 +11,7 @@ services:
       - "$PWD/conf/traefik.yml:/etc/traefik/traefik.yml"
       - "$PWD/conf/dynamic-conf.yml:/dynamic-conf.yml"
       - "${ACME_PATH}:/acme.json"
+      - "${ACCESS_PATH}:/var/log/traefik-access.log"
     networks:
       - web
 
