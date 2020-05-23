@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   traefik:
-    image: traefik:2.0
+    image: traefik:2.2.1
     container_name: traefik
     ports:
       - "443:443"
@@ -11,7 +11,7 @@ services:
       - "$PWD/conf/traefik.yml:/etc/traefik/traefik.yml"
       - "$PWD/conf/dynamic-conf.yml:/dynamic-conf.yml"
       - "${ACME_PATH}:/acme.json"
-      - "${ACCESS_PATH}:/var/log/traefik-access.log"
+      - "${ACCESS_PATH}:/log"
     networks:
       - web
 
